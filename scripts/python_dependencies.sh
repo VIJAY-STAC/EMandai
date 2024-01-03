@@ -2,6 +2,7 @@
 
 virtualenv /home/ubuntu/env
 source /home/ubuntu/env/bin/activate
+
 pip install -r /home/ubuntu/EMandai/requirements.txt
 sudo apt-get install -y libpq-dev
 pip install psycopg2

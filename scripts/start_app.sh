@@ -1,6 +1,6 @@
 #!/usr/bin/bash 
 
-sed -i 's/\[]/\["13.233.147.1"]/' /home/ubuntu/EMandai/cars/settings.py
+sed -i 's/\[]/\["15.207.21.250"]/' /home/ubuntu/EMandai/emandai/settings.py
 
 python manage.py migrate 
 python manage.py makemigrations     
