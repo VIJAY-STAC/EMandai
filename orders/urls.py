@@ -6,5 +6,5 @@ router = DefaultRouter()
 router.register(r"b2b",B2BOrdersViewSet,basename="b2b")
 router.register(r"b2c",B2COrdersViewSet,basename="b2c")
 urlpatterns = [
-    path('api/v1/',include(router.urls))
+    path('api/v1/',include(router.urls)) 
 ]
