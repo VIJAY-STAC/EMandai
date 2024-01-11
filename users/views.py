@@ -74,7 +74,7 @@ class UserViewSet(viewsets.ModelViewSet):
             try:
                 user = User.objects.get(email=email)
             except User.DoesNotExist:
-                return Response({"message": f"Invalid email.", "stat": False}, status=status.HTTP_400_BAD_REQUEST)
+                return Response({"message": f"Email id is not registered.", "stat": False}, status=status.HTTP_400_BAD_REQUEST)
 
             if not user.check_password(password):
                 return Response({"message": "incorrect_credentials","stat": False}, status=status.HTTP_400_BAD_REQUEST)
@@ -149,7 +149,17 @@ class UserViewSet(viewsets.ModelViewSet):
 
         return Response({"message":"Password changed succesfully."}, status=status.HTTP_200_OK)
 
-
+    @action(detail=False, methods=["post"], permission_classes=[])
+    def otp_verification(self, request, *args, **kwargs):
+        otp = request.data.get('otp', None)
+        email = request.data['email']
+        user = User.objects.get(email=email)
+        if not otp:
+            return Response({"error":"opt is required."}, status=status.HTTP_400_BAD_REQUEST)
+        response, otp_key = verify_otp(user_id=user.id, otp=otp)        
+        if otp_key is None:
+            return Response(response, status=status.HTTP_400_BAD_REQUEST)
+        return Response(True, status=status.HTTP_200_OK)
 
     @action(detail=False, methods=["post"])
     def create_roles(self, request, *args, **kwargs):
