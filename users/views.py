@@ -141,7 +141,7 @@ class UserViewSet(viewsets.ModelViewSet):
         response, otp_key = verify_otp(user_id=user.id, otp=otp)
 
         if otp_key is None:
-            return Response(response, status=status.HTTP_400_BAD_REQUEST)
+            return Response({"error":response}, status=status.HTTP_400_BAD_REQUEST)
 
         user.set_password(password)
         user.save(update_fields=["password"])
