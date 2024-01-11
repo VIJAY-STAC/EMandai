@@ -158,8 +158,8 @@ class UserViewSet(viewsets.ModelViewSet):
             return Response({"error":"opt is required."}, status=status.HTTP_400_BAD_REQUEST)
         response, otp_key = verify_otp(user_id=user.id, otp=otp)        
         if otp_key is None:
-            return Response(response, status=status.HTTP_400_BAD_REQUEST)
-        return Response(True, status=status.HTTP_200_OK)
+            return Response({"error":response}, status=status.HTTP_400_BAD_REQUEST)
+        return Response({"message":"OTP verified."}, status=status.HTTP_200_OK)
 
     @action(detail=False, methods=["post"])
     def create_roles(self, request, *args, **kwargs):
