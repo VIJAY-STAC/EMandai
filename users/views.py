@@ -74,7 +74,7 @@ class UserViewSet(viewsets.ModelViewSet):
             try:
                 user = User.objects.get(email=email)
             except User.DoesNotExist:
-                return Response({"message": f"Email id is not registered.", "stat": False}, status=status.HTTP_400_BAD_REQUEST)
+                return Response({"error": f"Email id is not registered.", "stat": False}, status=status.HTTP_400_BAD_REQUEST)
 
             if not user.check_password(password):
                 return Response({"message": "incorrect_credentials","stat": False}, status=status.HTTP_400_BAD_REQUEST)
@@ -123,7 +123,7 @@ class UserViewSet(viewsets.ModelViewSet):
         send_custom_email("OTP from todo app.", f"Your One time Password is : {otp}", [user.email])
 
         cache.set(otp_key, otp, 300)
-        return Response("OTP sent on registered email id.", status=status.HTTP_200_OK)
+        return Response({"message": "OTP sent on registered email id."}, status=status.HTTP_200_OK)
 
 
 
