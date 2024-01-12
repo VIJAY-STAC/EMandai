@@ -32,13 +32,13 @@ class UserViewSet(viewsets.ModelViewSet):
     parser_classes = (parsers.FormParser, parsers.JSONParser)
     filter_backends = (DjangoFilterBackend,)
     filter_class = UserFilter
-    permission_classes = (permissions.IsAuthenticated,)
+    # permission_classes = (permissions.IsAuthenticated,)
 
     def get_queryset(self):
         queryset = User.objects.all().order_by('-created_at')
         return queryset
-    @action(detail=False, methods=['post'],  permission_classes=[])
-    def create(self, request, *args, **kwargs):
+
+    def create(self, request):
         user_data = request.data
         user_data['password']=make_password(user_data['password'])
         pincode = request.data.get('pincode', None)
