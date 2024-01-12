@@ -23,6 +23,7 @@ from django.contrib.auth.models import Group
 from rest_framework import parsers, status, permissions, viewsets
 from django_filters.rest_framework import DjangoFilterBackend
 from duties.models import Routes
+from django.db.models import Q
 User = get_user_model()
 
 
@@ -40,7 +41,8 @@ class UserViewSet(viewsets.ModelViewSet):
 
     def create(self, request):
         user_data = request.data
-        user_data['password']=make_password(user_data['password'])
+        email = user_data.get('email', None)
+        mb = user_data.get('phone_number', None)
         pincode = request.data.get('pincode', None)
         user_type = request.data.get('user_type', None)
         quadrant = request.data.get('quadrant', None)
@@ -48,6 +50,12 @@ class UserViewSet(viewsets.ModelViewSet):
             return Response({"error": "Pincode is required"},status=status.HTTP_400_BAD_REQUEST)
         if not user_type:
             return Response({"error": "user_type is required"},status=status.HTTP_400_BAD_REQUEST)
+        
+        user = User.objects.filter(Q(phone_number=mb) | Q(email=email))
+
+        if user:
+            return Response({"error": "user already exist with given email or mobile number"},status=status.HTTP_400_BAD_REQUEST)
+
         if user_type=="customer":
             try:
                 user_q = Routes.objects.get(pincode=pincode)
@@ -57,6 +65,7 @@ class UserViewSet(viewsets.ModelViewSet):
         if user_type=="rider":
             if not quadrant:
                 return Response({"error": "Quadrant  is required"},status=status.HTTP_400_BAD_REQUEST)
+        user_data['password']=make_password(user_data['password'])
         serializer = UserSerializer(data=user_data)
         serializer.is_valid(raise_exception=True)
         serializer.save()
