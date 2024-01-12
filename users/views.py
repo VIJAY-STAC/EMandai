@@ -32,7 +32,7 @@ class UserViewSet(viewsets.ModelViewSet):
     parser_classes = (parsers.FormParser, parsers.JSONParser)
     filter_backends = (DjangoFilterBackend,)
     filter_class = UserFilter
-    # permission_classes = (permissions.IsAuthenticated,)
+    permission_classes = (permissions.IsAuthenticated,)
 
     def get_queryset(self):
         queryset = User.objects.all().order_by('-created_at')
@@ -66,7 +66,7 @@ class UserViewSet(viewsets.ModelViewSet):
     def destroy(self, request, *args, **kwargs):  
         return Response({},status=status.HTTP_405_METHOD_NOT_ALLOWED)
 
-    @action(detail=False, methods=['post'])
+    @action(detail=False, methods=['post'],  permission_classes=[])
     def login(self, request, *args, **kwargs):
         try:
             email = request.data['email']
@@ -100,7 +100,7 @@ class UserViewSet(viewsets.ModelViewSet):
             return Response(res, status=status.HTTP_400_BAD_REQUEST)
 
 
-    @action(detail=False, methods=['post'])
+    @action(detail=False, methods=['post'],  permission_classes=[])
     def forgot_password(self, request, *args, **kwargs):
         PASSWORD_RESET_KEY = "user_password_reset_key.{otp_key}"
         email = request.data['email']
