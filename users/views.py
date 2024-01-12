@@ -65,7 +65,6 @@ class UserViewSet(viewsets.ModelViewSet):
         if user_type=="rider":
             if not quadrant:
                 return Response({"error": "Quadrant  is required"},status=status.HTTP_400_BAD_REQUEST)
-        user_data['password']=make_password(user_data['password'])
         serializer = UserSerializer(data=user_data)
         serializer.is_valid(raise_exception=True)
         serializer.save()
