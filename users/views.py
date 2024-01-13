@@ -33,13 +33,20 @@ class UserViewSet(viewsets.ModelViewSet):
     parser_classes = (parsers.FormParser, parsers.JSONParser)
     filter_backends = (DjangoFilterBackend,)
     filter_class = UserFilter
-    # permission_classes = (permissions.IsAuthenticated,)
+    permission_classes = (permissions.IsAuthenticated,)
+
+    
 
     def get_queryset(self):
         queryset = User.objects.all().order_by('-created_at')
         return queryset
 
-    def create(self, request):
+    def create(self, request, *args, **kwargs):
+        return Response({},status=status.HTTP_405_METHOD_NOT_ALLOWED)
+
+
+    @action(detail=False, methods=['post'],  permission_classes=[])
+    def user_create(self, request, *args, **kwargs):
         user_data = request.data
         email = user_data.get('email', None)
         mb = user_data.get('phone_number', None)
@@ -70,9 +77,40 @@ class UserViewSet(viewsets.ModelViewSet):
         serializer.save()
         return Response(serializer.data, status=status.HTTP_201_CREATED)
 
-    
+    def update(self, request, *args, **kwargs):
+        id = kwargs.get('pk')
+        if not id:
+            return Response({"error":"product id is missing"}, status=status.HTTP_400_BAD_REQUEST)
+        try:
+            route=User.objects.get(id=id)
+        except User.DoesNotExist:
+            return Response({"error":"user does not exist with given id."}, status=status.HTTP_400_BAD_REQUEST)
+        serializer = UserSerializer(route, data=request.data, partial=True)
+        serializer.is_valid(raise_exception=True)
+        updated_route=serializer.save()
+        serializer=UserSerializer(updated_route)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+
+    def retrieve(self, request, *args, **kwargs):
+        id = kwargs.get('pk')
+        try:
+            route=User.objects.get(id=id)
+        except User.DoesNotExist:
+            return Response({"error":"user does not exist with given id."}, status=status.HTTP_400_BAD_REQUEST)
+        serializer=UserSerializer(route)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
     def destroy(self, request, *args, **kwargs):  
-        return Response({},status=status.HTTP_405_METHOD_NOT_ALLOWED)
+        id = kwargs.get('pk')
+        if not request.user.is_superuser:
+            return Response({"error":"permission not allowed."}, status=status.HTTP_403_FORBIDDEN)
+        try:
+            user=User.objects.get(id=id).delete()
+        except User.DoesNotExist:
+            return Response({"error":"user does not exist with given id."}, status=status.HTTP_400_BAD_REQUEST)
+
+        return Response({},status=status.HTTP_204_NO_CONTENT)
 
     @action(detail=False, methods=['post'],  permission_classes=[])
     def login(self, request, *args, **kwargs):
