@@ -72,6 +72,7 @@ class ProductsStock(PrimaryUUIDTimeStampedModel, CreatedByModel, LastModifiedByM
     expiry_date = models.DateField(null=True, blank=True,)
     inventory = models.IntegerField(null=False, blank=False, default=0)
     available = models.BooleanField(null=False, blank=False, default=True)
+    discount = models.IntegerField(default=0, null=True, blank=True)
 
 
     class Meta:

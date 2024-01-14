@@ -157,6 +157,7 @@ class OrderProducts(CreatedByModel):
                                 )
     
     quantity = models.IntegerField(blank=False,null=False,default=0)
+    discount = models.IntegerField(blank=False,null=False,default=0)
     checked_qty = models.IntegerField(blank=False,null=False,default=0)
     delivered_qty = models.IntegerField(blank=False,null=False,default=0)
     return_qty = models.IntegerField(blank=False,null=False,default=0)
