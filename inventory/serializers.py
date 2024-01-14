@@ -80,4 +80,5 @@ class ProductsStockListSerializer(serializers.ModelSerializer):
             "packaging",
             "inventory",
             "available",
+            "discount"
         )
