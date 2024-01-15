@@ -205,3 +205,12 @@ CORS_ALLOW_HEADERS = (
     "timezone",
     "sms_disabled",
 )
+
+CACHES = {
+    'default': {
+        'BACKEND': 'django.core.cache.backends.memcached.MemcachedCache',
+        'LOCATION': '127.0.0.1:11211',  # If Memcached is on the same EC2 instance
+        # or
+        # 'LOCATION': 'your-memcached-server-ip:11211',  # If Memcached is on a different EC2 instance
+    }
+}
