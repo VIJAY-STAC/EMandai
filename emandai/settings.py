@@ -187,10 +187,7 @@ AWS_DEFAULT_ACL =  None
 AWS_S3_VERITY = True
 DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
 
-# Cors settings
-CORS_ALLOWED_ORIGINS = [
-    '*',
-]
+
 CORS_ORIGIN_ALLOW_ALL = True
 CORS_ALLOW_METHODS = ("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS")
 CORS_ALLOW_CREDENTIALS = True
@@ -206,11 +203,13 @@ CORS_ALLOW_HEADERS = (
     "sms_disabled",
 )
 
-# CACHES = {
-#     'default': {
-#         'BACKEND': 'django.core.cache.backends.memcached.MemcachedCache',
-#         'LOCATION': '127.0.0.1:11211',  # If Memcached is on the same EC2 instance
-#         # or
-#         # 'LOCATION': 'your-memcached-server-ip:11211',  # If Memcached is on a different EC2 instance
-#     }
-# }
+CACHES = {
+    "default": {
+        "BACKEND": "django.core.cache.backends.locmem.LocMemCache",
+        "LOCATION": "",
+    }
+}
+
+CORS_ALLOWED_ORIGINS = [
+    "https://bestdeveloper.in",
+]
