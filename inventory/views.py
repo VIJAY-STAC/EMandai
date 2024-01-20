@@ -165,6 +165,7 @@ class ProductsStockViewSet(viewsets.ModelViewSet, ProductsQueryset):
         data = request.data
         serializers = ProductsStockSerializer(data=data)
         serializers.is_valid(raise_exception=True)
+        serializers.save()
         return Response(serializers.data, status=status.HTTP_200_OK)
 
     def list(self, request, *args, **kwargs):
