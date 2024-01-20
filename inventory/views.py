@@ -171,17 +171,20 @@ class ProductsStockViewSet(viewsets.ModelViewSet, ProductsQueryset):
 
     def update(self, request, *args, **kwargs):
         id = kwargs.get('pk')
-        mrp =request.data.get('mrp')
+        mrp =request.data.get('mrp', None)
+        discount =request.data.get('discount',None)
         try:
             product_stock = ProductsStock.objects.get(id=id)
         except ProductsStock.DoesNotExist:
             return Response({"error":"product not present with given id"}, status=status.HTTP_400_BAD_REQUEST)
         product_stock.sale_mrp=mrp
-        product_stock.save(update_fields="sale_mrp")
+        product_stock.discount=discount
+        
+        product_stock.save()
         serializers = ProductsStockListSerializer(product_stock)
         return Response(serializers.data, status=status.HTTP_200_OK)
 
-        return Response(serializers.data, status=status.HTTP_200_OK)
+       
 
     def retrivew(self, request, *args, **kwargs):
         id = kwargs.get('pk')
