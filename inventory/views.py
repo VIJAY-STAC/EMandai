@@ -162,7 +162,10 @@ class ProductsStockViewSet(viewsets.ModelViewSet, ProductsQueryset):
         return queryset
 
     def create(self, request, *args, **kwargs):
-        return Response({}, status=status.HTTP_405_METHOD_NOT_ALLOWED)
+        data = request.data
+        serializers = ProductsStockSerializer(data=data)
+        serializers.is_valid(raise_exception=True)
+        return Response(serializers.data, status=status.HTTP_200_OK)
 
     def list(self, request, *args, **kwargs):
         queryset = ProductsStock.objects.all().select_related("product").order_by("-created_at")
