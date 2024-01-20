@@ -65,6 +65,18 @@ class FarmerProductsListSerializer(serializers.ModelSerializer):
 
 ProductsStock
 
+class ProductsStockSerializer(serializers.ModelSerializer):
+     class Meta:
+        model = ProductsStock
+        fields=(
+            	"product",
+                "sale_mrp",
+                "expiry_date",
+                "inventory",
+                "available",
+                "discount"
+        )
+
 
 class ProductsStockListSerializer(serializers.ModelSerializer):
     product_name= serializers.CharField(source="product.name")
