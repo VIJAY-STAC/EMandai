@@ -48,6 +48,7 @@ class CartSerializer(serializers.ModelSerializer):
     product_name= serializers.CharField(source="product.product.name")
     packaging = serializers.CharField(source="product.product.packaging")
     product_images = serializers.SerializerMethodField(default=None)
+    quantity = serializers.CharField(source="product.discount", default=0)
     class Meta:
         model = Cart
         fields =(
@@ -57,9 +58,11 @@ class CartSerializer(serializers.ModelSerializer):
             "amt",
             "product_name",
             "packaging",
-            "product_images"
+            "product_images",
+            "quantity",
         )
 
     def get_product_images(self, obj):
         img = obj.product.product.product_images.all().first().url
         return img
+
