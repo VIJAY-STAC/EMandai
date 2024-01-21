@@ -16,6 +16,8 @@ Payment_methods=(
 Category_types=(
     ('green_vegies','Green Vegies'),
     ('vegitables','Vegetables'),
+    ('salad','Salad'),
+    ('fruits','Fruits'),
 )
 
 Packaging_types = (
