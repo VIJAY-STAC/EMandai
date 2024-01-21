@@ -43,3 +43,23 @@ class B2COrderSerializer(serializers.ModelSerializer):
             "payment_status",
             "quadrant"
         )
+
+class CartSerializer(serializers.ModelSerializer):
+    product_name= serializers.CharField(source="product.product.name")
+    packaging = serializers.CharField(source="product.product.packaging")
+    product_images = serializers.SerializerMethodField(default=None)
+    class Meta:
+        model = Cart
+        fields =(
+            "id",
+            "product",
+            "quantity",
+            "amt",
+            "product_name",
+            "packaging",
+            "product_images"
+        )
+
+    def get_product_images(self, obj):
+        img = obj.product.product.product_images.all().first().url
+        return img
