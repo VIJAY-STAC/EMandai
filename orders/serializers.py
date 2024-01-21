@@ -56,6 +56,7 @@ class CartSerializer(serializers.ModelSerializer):
             "product",
             "quantity",
             "amt",
+            "total_amt",
             "product_name",
             "packaging",
             "product_images",
