@@ -200,3 +200,29 @@ class ProductsStockViewSet(viewsets.ModelViewSet, ProductsQueryset):
         serializers = ProductsStockListSerializer(product_stock)
         return Response(serializers.data, status=status.HTTP_200_OK)
        
+    @action(detail=False, methods=['get'])
+    def home_page(self, request, *args, **kwargs):
+        res = []
+        queryset = ProductsStock.objects.all().select_related("product").order_by("-created_at")
+        today_offer = queryset.filter(discount__gt=0)
+        today_offer_serializer = ProductsStockListSerializer(today_offer , many=True)
+
+        res.append({"today_off":today_offer_serializer.data})
+
+        vegies = queryset.filter(product__category__name="vegitables")
+        vegies_serializer = ProductsStockListSerializer(vegies , many=True)
+
+        res.append({"vegies":vegies_serializer.data})
+
+        green_vegies = queryset.filter(product__category__name="green_vegies")
+        green_vegies_serializer = ProductsStockListSerializer(green_vegies , many=True)
+
+        res.append({"green_vegies":green_vegies_serializer.data})
+
+
+        salad = queryset.filter(product__category__name="salad")
+        salad_serializer = ProductsStockListSerializer(salad , many=True)
+
+        res.append({"salad":salad_serializer.data})
+
+        return Response(res, status=status.HTTP_200_OK)
