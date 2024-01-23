@@ -7,7 +7,7 @@ from rest_framework.response import Response
 from rest_framework import status
 from django.db import transaction
 from inventory.models import ProductsStock, FarmerProducts
-
+from django.db.models import Sum
 from .models import *
 from .serializers import * 
 # Create your views here.
@@ -631,7 +631,14 @@ class B2COrdersViewSet(viewsets.ModelViewSet):
     def cart_list(self, request, *args, **kwargs):
         cart_list = Cart.objects.filter(user=request.user)
         serializers = CartSerializer(cart_list, many=True)
-        return Response(serializers.data, status=status.HTTP_200_OK)
+
+        total = cart_list.aggregate(total=Sum("total_amt"))
+        res = {
+            "cart_list":serializers.data,
+            "total":total
+
+        }
+        return Response(res, status=status.HTTP_200_OK)
 
     @action(detail=False, methods=['get'])
     def cart_items_count(self, request, *args, **kwargs):
