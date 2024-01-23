@@ -103,7 +103,7 @@ class B2COrders(CreatedByModel, LastModifiedByModel):
                 # If no existing invoice number, start from 1
                 new_number = 1
 
-            self.invoice_number = f'B2C-{new_number}'
+            self.invoice_number = f'E-{new_number}'
 
         super(B2COrders, self).save(*args, **kwargs)
     def __str__(self) :
