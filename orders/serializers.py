@@ -36,6 +36,7 @@ class B2COrderSerializer(serializers.ModelSerializer):
         model = B2COrders
         fields=(
             "id",
+            "created_at",
             "order_type",
             "amount",
             "status",
