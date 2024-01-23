@@ -635,7 +635,7 @@ class B2COrdersViewSet(viewsets.ModelViewSet):
         total = cart_list.aggregate(total=Sum("total_amt"))
         res = {
             "cart_list":serializers.data,
-            "total":total
+            "total":total["total_amt"]
 
         }
         return Response(res, status=status.HTTP_200_OK)
