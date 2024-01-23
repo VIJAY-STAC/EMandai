@@ -630,8 +630,12 @@ class B2COrdersViewSet(viewsets.ModelViewSet):
     @action(detail=False, methods=['get'])
     def cart_list(self, request, *args, **kwargs):
         cart_list = Cart.objects.filter(user=request.user)
-        serializers = CartSerializer(cart_list, many=True)
         return Response(serializers.data, status=status.HTTP_200_OK)
+
+    @action(detail=False, methods=['get'])
+    def cart_items_count(self, request, *args, **kwargs):
+        cart_list = Cart.objects.filter(user=request.user)
+        return Response(len(cart_list), status=status.HTTP_200_OK)
 
     @action(detail=False, methods=['post'])
     def update_cart(self, request, *args, **kwargs):
