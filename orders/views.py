@@ -729,7 +729,7 @@ class B2COrdersViewSet(viewsets.ModelViewSet):
             order.save()
             serializer = B2COrderSerializer(order)
             carts.delete()
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
+            return Response(serializer.data, status=status.HTTP_200_OK)
 
         
     @action(detail=False, methods=['get'])
