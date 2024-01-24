@@ -734,6 +734,6 @@ class B2COrdersViewSet(viewsets.ModelViewSet):
         
     @action(detail=False, methods=['get'])
     def customer_order_list(self, request, *args, **kwargs):
-        orders =B2COrders.objects.filter(created_by=request.user)
+        orders =B2COrders.objects.filter(created_by=request.user).order_by('-created_at')
         serializers = B2COrderSerializer(orders, many=True)
         return Response(serializers.data, status=status.HTTP_200_OK)
