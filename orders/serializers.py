@@ -32,6 +32,7 @@ class B2BOrderListSerializer(serializers.ModelSerializer):
 
 
 class B2COrderSerializer(serializers.ModelSerializer):
+    invoice_number = serializers.CharField(required=False)
     class Meta:
         model = B2COrders
         fields=(
