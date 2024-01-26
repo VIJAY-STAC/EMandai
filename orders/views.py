@@ -734,6 +734,9 @@ class B2COrdersViewSet(viewsets.ModelViewSet):
         
     @action(detail=False, methods=['get'])
     def customer_order_list(self, request, *args, **kwargs):
+        invoice_num = request.query_params.get('invoice_number',None)
         orders =B2COrders.objects.filter(created_by=request.user).order_by('-created_at')
+        if invoice_num is not None:
+            orders =orders.filter(invoice_number__icontains=invoice_num)
         serializers = B2COrderSerializer(orders, many=True)
         return Response(serializers.data, status=status.HTTP_200_OK)
