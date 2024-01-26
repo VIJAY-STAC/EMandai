@@ -339,6 +339,9 @@ class B2COrdersViewSet(viewsets.ModelViewSet):
         serializer=B2COrderRetrivewSerializer(order)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
+    def destroy(self, request, *args, **kwargs):
+        return Response({}, status=status.HTTP_405_METHOD_NOT_ALLOWED  )
+
     @action(detail=False, methods=['post'])
     def accept_b2c_order(self, request, *args, **kwargs):
         id = request.data.get('id',None)
