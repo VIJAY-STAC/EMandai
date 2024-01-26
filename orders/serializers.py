@@ -47,6 +47,41 @@ class B2COrderSerializer(serializers.ModelSerializer):
             "quadrant"
         )
 
+class B2COrderRetrivewSerializer(serializers.ModelSerializer):
+    invoice_number = serializers.CharField(required=False)
+    products = serializers.SerializerMethodField(default=None)
+    class Meta:
+        model = B2COrders
+        fields=(
+            "id",
+            "invoice_number",
+            "created_at",
+            "order_type",
+            "amount",
+            "status",
+            "payment_type",
+            "payment_status",
+            "quadrant",
+            "products"
+        )
+    def get_products(self, obj):
+        o_ps = OrderProducts.objects.filter(b2corder_id=obj.id)
+        res = []
+        for o_p in o_ps:
+            data = {
+                "id": o_p.id,
+                "product": o_p.b2cproduct.id,
+                "quantity": o_p.quantity,
+                "amt":o_p.amt,
+                "total_amt": o_p.total_amt,
+                "product_name": o_p.b2cproduct.product.name,
+                "packaging": o_p.b2cproduct.product.packaging,
+                "product_images":  o_p.b2cproduct.product.product_images.all().first().url,
+                "discount": o_p.discount
+            }
+            res.append(data)
+        return res
+
 class CartSerializer(serializers.ModelSerializer):
     product_name= serializers.CharField(source="product.product.name")
     packaging = serializers.CharField(source="product.product.packaging")

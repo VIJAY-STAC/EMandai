@@ -67,6 +67,8 @@ class B2BOrdersViewSet(viewsets.ModelViewSet):
             serializer = B2BOrderListSerializer(order)
             return Response(serializer.data, status=status.HTTP_201_CREATED)
 
+            
+
     @action(detail=False, methods=['post'])
     def accept_b2b_order(self, request, *args, **kwargs):
         id = request.data.get('id',None)
@@ -327,6 +329,15 @@ class B2COrdersViewSet(viewsets.ModelViewSet):
             order.save()
             serializer = B2COrderSerializer(order)
             return Response(serializer.data, status=status.HTTP_201_CREATED)
+
+    def retrieve(self, request, *args, **kwargs):
+        id = kwargs.get('pk')
+        try:
+            order = B2COrders.objects.get(id=id)
+        except B2COrders.DoesNotExist:
+            return Response({"error":"order does not exist with given id."}, status=status.HTTP_400_BAD_REQUEST)
+        serializer=B2COrderRetrivewSerializer(order)
+        return Response(serializer.data, status=status.HTTP_200_OK)
 
     @action(detail=False, methods=['post'])
     def accept_b2c_order(self, request, *args, **kwargs):
