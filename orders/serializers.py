@@ -33,6 +33,7 @@ class B2BOrderListSerializer(serializers.ModelSerializer):
 
 class B2COrderSerializer(serializers.ModelSerializer):
     invoice_number = serializers.CharField(required=False)
+    customer_status= serializers.CharField(required=False)
     class Meta:
         model = B2COrders
         fields=(
@@ -42,6 +43,7 @@ class B2COrderSerializer(serializers.ModelSerializer):
             "order_type",
             "amount",
             "status",
+            "customer_status",
             "payment_type",
             "payment_status",
             "quadrant"
@@ -59,6 +61,7 @@ class B2COrderRetrivewSerializer(serializers.ModelSerializer):
             "order_type",
             "amount",
             "status",
+            "customer_status",
             "payment_type",
             "payment_status",
             "quadrant",
