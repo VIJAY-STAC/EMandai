@@ -196,7 +196,8 @@ class DutyViewSet(viewsets.ModelViewSet):
             for order in orders:
                 order.duty=duty
                 order.status = "out_for_delivery"
-                order.save(update_fields=["duty","status"])
+                order.customer_status="out_for_delivery"
+                order.save(update_fields=["duty","status","customer_status"])
                 oc +=1
             duty.total_outlets=oc
             duty.save(update_fields=["total_outlets"])

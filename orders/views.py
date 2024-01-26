@@ -350,6 +350,7 @@ class B2COrdersViewSet(viewsets.ModelViewSet):
             return Response({"error":"order does not exist with given id."}, status=status.HTTP_400_BAD_REQUEST)
 
         order.status= "accepted"
+        order.customer_status = "accepted"
         order.save()
         return Response("Order accepted.", status=status.HTTP_200_OK)
 
@@ -403,7 +404,8 @@ class B2COrdersViewSet(viewsets.ModelViewSet):
         if mismatch:
             return Response({"error":mismatch}, status=status.HTTP_400_BAD_REQUEST)
         order.status="ready_to_delivery"
-        order.save(update_fields=["status"])
+        order.customer_status="ready_to_delivery"
+        order.save(update_fields=["status","customer_status"])
         return Response({"message":"Order is ready for delivery"}, status=status.HTTP_200_OK)
 
     
@@ -499,8 +501,9 @@ class B2COrdersViewSet(viewsets.ModelViewSet):
                 op_update.append(sku)
         OrderProducts.objects.bulk_update(op_update,["delivered_qty"]) 
         order.status ="delivered"
+        order.customer_status="delivered"
         order.delivery_attempted=True
-        order.save(update_fields=["status","delivery_attempted"])
+        order.save(update_fields=["status","delivery_attempted","customer_status"])
         duty=Duty.objects.get(id=order.duty.id)
         duty.delivered_attempted_outlets += 1
         duty.save(update_fields=["delivered_attempted_outlets"])
@@ -561,8 +564,9 @@ class B2COrdersViewSet(viewsets.ModelViewSet):
             ProductsStock.objects.bulk_update(prod_stock_update,["inventory"]) 
             order.amount=order.amount-total_amount
             order.status ="r_a_wh"
+            order.customer_status="cancelled"
             order.notes=notes
-            order.save(update_fields=["status","amount","notes"])
+            order.save(update_fields=["status","amount","notes","customer_status"])
         elif  order.status in ["ready_to_delivery","out_for_delivery","delivered"]:
             order.status ="cancelled"
             order.notes=notes
