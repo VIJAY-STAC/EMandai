@@ -81,6 +81,7 @@ class B2COrders(CreatedByModel, LastModifiedByModel):
     amount = models.DecimalField(max_digits=10, decimal_places=2)
     collected_amount = models.DecimalField(max_digits=10, decimal_places=2 , default=0.0)
     status= models.CharField(max_length=20, blank=False, null=False, choices=Order_status)
+    customer_status= models.CharField(max_length=20, blank=False, null=False, choices=Order_status, default='placed')
     payment_type = models.CharField(max_length=10, blank=False, null=False, choices=Payment_type)
     payment_status= models.CharField(max_length=20, blank=False, null=False, choices=Payment_status)
     duty = models.ForeignKey(Duty, null=True,blank=True,on_delete=models.SET_NULL,related_name="duty_order")
