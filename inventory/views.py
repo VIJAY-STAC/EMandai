@@ -193,9 +193,8 @@ class ProductsStockViewSet(viewsets.ModelViewSet, ProductsStockQueryset):
 
     
 
-    def retrivew(self, request, *args, **kwargs):
+    def retrieve(self, request, *args, **kwargs):
         id = kwargs.get('pk')
-        mrp =request.data.get('mrp')
         try:
             product_stock = ProductsStock.objects.get(id=id)
         except ProductsStock.DoesNotExist:
