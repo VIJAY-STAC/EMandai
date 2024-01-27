@@ -4,3 +4,8 @@ class ProductsQueryset:
     def custom_get_queryset(self):
         queryset = Products.objects.select_related("category").all("-created_at")
         return queryset
+
+class ProductsStockQueryset:
+    def custom_get_queryset(self):
+        queryset = ProductsStock.objects.select_related("product").order_by("-created_at")
+        return queryset

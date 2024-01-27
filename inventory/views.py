@@ -7,7 +7,7 @@ from rest_framework import status
 import base64
 from django.utils import timezone
 
-from .queryset import ProductsQueryset
+from .queryset import ProductsQueryset, ProductsStockQueryset
 from .utils import product_image_upload
 from .filters import *
 
@@ -150,15 +150,16 @@ class FarmerProductsViewSet(viewsets.ModelViewSet, ProductsQueryset):
         return Response(serializer.data, status=status.HTTP_200_OK)
 
      
-class ProductsStockViewSet(viewsets.ModelViewSet, ProductsQueryset):
+class ProductsStockViewSet(viewsets.ModelViewSet, ProductsStockQueryset):
     model = ProductsStock
     serializer_class = ProductsStockListSerializer
     parser_classes = (parsers.FormParser, parsers.JSONParser, parsers.MultiPartParser)
     filter_backends = (DjangoFilterBackend,)
+    filter_class = ProductsStockFilter
     permission_classes = (permissions.IsAuthenticated,)
 
     def get_queryset(self):
-        queryset = ProductsStock.objects.all()
+        queryset = self.custom_get_queryset()
         return queryset
 
     def create(self, request, *args, **kwargs):
@@ -168,10 +169,6 @@ class ProductsStockViewSet(viewsets.ModelViewSet, ProductsQueryset):
         serializers.save()
         return Response(serializers.data, status=status.HTTP_200_OK)
 
-    def list(self, request, *args, **kwargs):
-        queryset = ProductsStock.objects.all().select_related("product").order_by("-created_at")
-        serializers = ProductsStockListSerializer(queryset , many=True)
-        return Response(serializers.data, status=status.HTTP_200_OK)
 
     def update(self, request, *args, **kwargs):
         id = kwargs.get('pk')
