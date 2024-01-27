@@ -641,7 +641,7 @@ class B2COrdersViewSet(viewsets.ModelViewSet):
         try:
             route=Routes.objects.get(pincode=pincode,is_active=True)
         except Routes.DoesNotExist:
-            return Response({"error":f"We are currently not serving this area."},status=status.HTTP_400_BAD_REQUEST)
+            return Response({"error":f"We are currently not serving in {pincode} pincode area."},status=status.HTTP_400_BAD_REQUEST)
 
         if cart:
             cart.quantity=qty
@@ -711,7 +711,7 @@ class B2COrdersViewSet(viewsets.ModelViewSet):
             try:
                 route=Routes.objects.get(pincode=pincode,is_active=True)
             except Routes.DoesNotExist:
-                return Response({"error":f"We are currently not serving this area."},status=status.HTTP_400_BAD_REQUEST)
+                return Response({"error":f"We are currently not serving  in {pincode} pincode area."},status=status.HTTP_400_BAD_REQUEST)
 
         with transaction.atomic():
             payment_type=request.data.get('payment_type',None)
