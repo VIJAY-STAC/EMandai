@@ -185,7 +185,13 @@ class ProductsStockViewSet(viewsets.ModelViewSet, ProductsStockQueryset):
         serializers = ProductsStockListSerializer(product_stock)
         return Response(serializers.data, status=status.HTTP_200_OK)
 
-       
+    @action(detail=False, methods=['get'])
+    def first_20_products(self, request, *args, **kwargs):
+        product_stock = ProductsStock.objects.all().order_by("-inventory")[:20]
+        serializers = ProductsStockListSerializer(product_stock, many=True)
+        return Response(serializers.data, status=status.HTTP_200_OK)
+
+    
 
     def retrivew(self, request, *args, **kwargs):
         id = kwargs.get('pk')
