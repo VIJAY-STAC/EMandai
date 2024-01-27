@@ -13,7 +13,8 @@ class RoutesSerializer(serializers.ModelSerializer):
             "name",
             "pincode",
             "quadrant",
-            "areas"
+            "areas",
+            "is_active"
         )
 
 class RoutesListSerializer(serializers.ModelSerializer):
@@ -25,7 +26,8 @@ class RoutesListSerializer(serializers.ModelSerializer):
             "name",
             "pincode",
             "quadrant",
-            "areas"
+            "areas",
+            "is_active"
         )
 
 class QuadrantsSerializer(serializers.ModelSerializer):
@@ -33,7 +35,8 @@ class QuadrantsSerializer(serializers.ModelSerializer):
         model = Quadrants
         fields=(
             "id",
-            "name"
+            "name",
+            "is_active"
         )
 
 # DutySeriaizer

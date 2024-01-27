@@ -22,6 +22,7 @@ class Quadrants(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     modified_at = models.DateTimeField(auto_now=True)
     name = models.CharField(max_length=50, blank=False, null=False)
+    is_active = models.BooleanField(default=False)
 
     class Meta:
         unique_together = [("name" )  ]
@@ -34,7 +35,7 @@ class Routes(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     modified_at = models.DateTimeField(auto_now=True)
     name = models.CharField(max_length=50, blank=False, null=False)
-    pincode = models.CharField(max_length=6, blank=False, null=False)
+    pincode = models.CharField(max_length=6, blank=False, null=False,unique=True)
     areas = models.CharField(max_length=50, blank=True, null=True)
     quadrant = models.ForeignKey(   Quadrants, 
                                     null=True,
@@ -42,6 +43,7 @@ class Routes(models.Model):
                                     on_delete=models.SET_NULL,
                                     related_name="route_quadrant"
                                 )
+    is_active = models.BooleanField(default=False)
 
     class Meta:
         unique_together = [("pincode","quadrant")  ]

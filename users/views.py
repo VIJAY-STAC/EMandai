@@ -136,6 +136,7 @@ class UserViewSet(viewsets.ModelViewSet):
                 'user_type': user.user_type,
                 'quadrant': user.quadrant.id if user.quadrant else None,
                 'quadrant_name': user.quadrant.name if user.quadrant else None,
+                'pincode': user.pincode
                
                 
             }

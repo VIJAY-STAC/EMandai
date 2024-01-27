@@ -6,6 +6,7 @@ from rest_framework.decorators import action
 from rest_framework.response import Response
 from rest_framework import status
 from django.db import transaction
+from duties.models import Routes
 from inventory.models import ProductsStock, FarmerProducts
 from django.db.models import Sum
 from .models import *
@@ -613,6 +614,7 @@ class B2COrdersViewSet(viewsets.ModelViewSet):
     @action(detail=False, methods=['post'])
     def add_to_cart(self, request, *args, **kwargs):
         product_id = request.data.get('product_id',None)
+        pincode = request.data.get('pincode',None)
         qty = request.data.get('qty',None)
         if not product_id:
             return Response({"error":"Product id is required."},status=status.HTTP_400_BAD_REQUEST)
@@ -629,6 +631,17 @@ class B2COrdersViewSet(viewsets.ModelViewSet):
             cart = Cart.objects.get(product=product_id, user=request.user)
         except Cart.DoesNotExist:
             cart=None
+
+        # fields = request.user._meta.get_fields()
+
+        # # Extract field names from the fields
+        # field_names = [field.name for field in fields]
+
+        # Print the field names
+        try:
+            route=Routes.objects.get(pincode=pincode,is_active=True)
+        except Routes.DoesNotExist:
+            return Response({"error":f"We are current not serving this area."},status=status.HTTP_400_BAD_REQUEST)
 
         if cart:
             cart.quantity=qty
