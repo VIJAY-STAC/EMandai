@@ -123,7 +123,7 @@ class UserViewSet(viewsets.ModelViewSet):
                 return Response({"error": f"Email id is not registered.", "stat": False}, status=status.HTTP_400_BAD_REQUEST)
 
             if not user.check_password(password):
-                return Response({"message": "incorrect_credentials","stat": False}, status=status.HTTP_400_BAD_REQUEST)
+                return Response({"error": "incorrect_credentials","stat": False}, status=status.HTTP_400_BAD_REQUEST)
 
             refresh = RefreshToken.for_user(user)
 
@@ -138,7 +138,6 @@ class UserViewSet(viewsets.ModelViewSet):
                 'quadrant_name': user.quadrant.name if user.quadrant else None,
                 'pincode': user.pincode
                
-                
             }
 
             return Response(user_details, status=status.HTTP_200_OK)
