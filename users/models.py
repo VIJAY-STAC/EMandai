@@ -35,6 +35,7 @@ class User(AbstractUser):
     address = models.CharField(max_length=500, null=False,blank=False)
     pincode = models.CharField(max_length=6, blank=False, null=False)
     gender = models.CharField(choices=USER_Gender,null=True, blank=True, max_length=20)
+    otp = models.CharField(null=True, blank=True, max_length=6)
     user_type = models.CharField(
         null=False, blank=False, max_length=32, choices=USER_TYPES, 
     )

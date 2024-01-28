@@ -155,24 +155,15 @@ class UserViewSet(viewsets.ModelViewSet):
             user = User.objects.get(email=email)
         except User.DoesNotExist:
             return Response({"error": f"user with {email} is not registered."}, status=status.HTTP_400_BAD_REQUEST)
-
-        otp, otp_key = generate_otp_and_key(
-            uuid=user.id, secret_key=PASSWORD_RESET_KEY)
-
-        if cache.get(otp_key) is not None:
-            otp = cache.get(otp_key)
-
-        print(otp)
-
-        if len(str(otp)) > 6:
-            otp = str(otp)[:6]
-
+        if user.otp:
+                otp = str(otp)[:6]
+        else:
+            otp, otp_key = generate_otp_and_key(
+                uuid=user.id, secret_key=PASSWORD_RESET_KEY)
+            user.otp = otp
+            user.save()
         send_custom_email("OTP from todo app.", f"Your One time Password is : {otp}", [user.email])
-
-        cache.set(otp_key, otp, 300)
         return Response({"message": "OTP sent on registered email id."}, status=status.HTTP_200_OK)
-
-
 
     @action(detail=False, methods=["post"], permission_classes=[])
     def set_new_password(self, request, *args, **kwargs):
@@ -185,15 +176,17 @@ class UserViewSet(viewsets.ModelViewSet):
         except User.DoesNotExist:
             return Response({"error": f"user with {email} is not registered."}, status=status.HTTP_400_BAD_REQUEST)
 
-        response, otp_key = verify_otp(user_id=user.id, otp=otp)
+        if user.otp:
+            if otp !=user.otp:
+                return Response({"error":"invalid otp."}, status=status.HTTP_400_BAD_REQUEST)
+        else:
+            return Response({"error":"otp expired."}, status=status.HTTP_400_BAD_REQUEST)
 
-        if otp_key is None:
-            return Response({"error":response}, status=status.HTTP_400_BAD_REQUEST)
-
+        
         user.set_password(password)
         user.save(update_fields=["password"])
-        cache.delete(otp_key)
-
+        user.otp=None
+        user.save()
         return Response({"message":"Password changed succesfully."}, status=status.HTTP_200_OK)
 
     @action(detail=False, methods=["post"], permission_classes=[])
@@ -203,9 +196,12 @@ class UserViewSet(viewsets.ModelViewSet):
         user = User.objects.get(email=email)
         if not otp:
             return Response({"error":"opt is required."}, status=status.HTTP_400_BAD_REQUEST)
-        response, otp_key = verify_otp(user_id=user.id, otp=otp)        
-        if otp_key is None:
-            return Response({"error":response}, status=status.HTTP_400_BAD_REQUEST)
+        # response, otp_key = verify_otp(user_id=user.id, otp=otp)        
+        if user.otp:
+            if otp !=user.otp:
+                return Response({"error":"invalid otp."}, status=status.HTTP_400_BAD_REQUEST)
+        else:
+            return Response({"error":"otp expired."}, status=status.HTTP_400_BAD_REQUEST)
         return Response({"message":"OTP verified."}, status=status.HTTP_200_OK)
 
     @action(detail=False, methods=["post"])
