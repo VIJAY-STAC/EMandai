@@ -156,7 +156,7 @@ class UserViewSet(viewsets.ModelViewSet):
         except User.DoesNotExist:
             return Response({"error": f"user with {email} is not registered."}, status=status.HTTP_400_BAD_REQUEST)
         if user.otp:
-                otp = str(otp)[:6]
+                otp = str(user.otp)[:6]
         else:
             otp, otp_key = generate_otp_and_key(
                 uuid=user.id, secret_key=PASSWORD_RESET_KEY)
