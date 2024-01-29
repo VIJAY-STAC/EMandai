@@ -87,6 +87,7 @@ class B2COrderRetrivewSerializer(serializers.ModelSerializer):
 
 class CartSerializer(serializers.ModelSerializer):
     product_name= serializers.CharField(source="product.product.name")
+    available = serializers.BooleanField(source="product.available")
     packaging = serializers.CharField(source="product.product.packaging")
     product_images = serializers.SerializerMethodField(default=None)
     discount = serializers.CharField(source="product.discount", default=0)
@@ -102,6 +103,7 @@ class CartSerializer(serializers.ModelSerializer):
             "packaging",
             "product_images",
             "discount",
+            "available"
         )
 
     def get_product_images(self, obj):

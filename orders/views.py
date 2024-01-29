@@ -624,13 +624,19 @@ class B2COrdersViewSet(viewsets.ModelViewSet):
             product = ProductsStock.objects.get(id=product_id)
         except ProductsStock.DoesNotExist:
             return Response({"error":"product does not exist with given id."},status=status.HTTP_400_BAD_REQUEST)
-        
-        if product.inventory<qty:
-            return Response({"error":f"Current stock is {product.inventory}."},status=status.HTTP_400_BAD_REQUEST)
+
+
         try:
             cart = Cart.objects.get(product=product_id, user=request.user)
+            if product.inventory<(cart.quantity+qty):
+                return Response({"error":f"Current available stock is {product.inventory}."},status=status.HTTP_400_BAD_REQUEST)
+        
         except Cart.DoesNotExist:
             cart=None
+        
+        if product.inventory<qty:
+            return Response({"error":f"Current available stock is {product.inventory}."},status=status.HTTP_400_BAD_REQUEST)
+        
 
         # fields = request.user._meta.get_fields()
 
