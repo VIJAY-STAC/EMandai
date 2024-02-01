@@ -7,8 +7,27 @@ class UserSerializer(serializers.ModelSerializer):
    
     class Meta:
         model = User
-        fields = ('id', 'email', 'first_name','last_name','address','pincode','quadrant','gender','user_type','phone_number','username',
-                 'date_of_birth')
+        fields = (  'id',
+                    'email',
+                    'first_name',
+                    'last_name',
+                    'address',
+                    'pincode',
+                    'quadrant',
+                    'gender',
+                    'user_type',
+                    'phone_number',
+                    'username',
+                    'date_of_birth',
+                    'latitude',
+                    'longitude'
+                
+                )
+
+        extra_kwargs = {
+            'latitude': {'required': False},
+            'longitude': {'required': False},
+        }
      
 
 class UserRoleSerializer(serializers.ModelSerializer):

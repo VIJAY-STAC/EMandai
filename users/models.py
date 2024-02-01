@@ -34,6 +34,8 @@ class User(AbstractUser):
     phone_number = PhoneNumberField(blank=True, null=True)
     address = models.CharField(max_length=500, null=False,blank=False)
     pincode = models.CharField(max_length=6, blank=False, null=False)
+    latitude = models.CharField(max_length=15, blank=True, null=True)
+    longitude = models.CharField(max_length=15, blank=True, null=True)
     gender = models.CharField(choices=USER_Gender,null=True, blank=True, max_length=20)
     otp = models.CharField(null=True, blank=True, max_length=6)
     user_type = models.CharField(
