@@ -7,6 +7,6 @@ class ProductsQueryset:
 
 class ProductsStockQueryset:
     def custom_get_queryset(self):
-        if self.action =="list":
-            queryset = ProductsStock.objects.select_related("product", "product__category").order_by("-created_at")
+    
+        queryset = ProductsStock.objects.select_related("product", "product__category").order_by("-created_at")
         return queryset
