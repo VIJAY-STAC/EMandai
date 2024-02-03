@@ -25,13 +25,30 @@ class ProductsListSerializer(serializers.ModelSerializer):
             "packaging"
         )
 
+
+class CategoryCreateSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Category
+        fields=(
+            "name",
+        )
+    def create(self, validated_data):
+        return Category.objects.create(**validated_data)
+
 class CategorySerializer(serializers.ModelSerializer):
+    cat_images = serializers.SerializerMethodField(default=None)
     class Meta:
         model = Category
         fields=(
             "id",
             "name",
+            "cat_images"
         )
+
+    def get_cat_images(self, obj):
+        img = obj.images.all().first().url  if obj.images.all().first() else None
+        return img
+
 
 class FarmerProductsSerializer(serializers.ModelSerializer):
     class Meta:
@@ -63,7 +80,6 @@ class FarmerProductsListSerializer(serializers.ModelSerializer):
             "farmer_name"
         )
 
-ProductsStock
 
 class ProductsStockSerializer(serializers.ModelSerializer):
      class Meta:

@@ -8,7 +8,7 @@ import base64
 from django.utils import timezone
 
 from .queryset import ProductsQueryset, ProductsStockQueryset
-from .utils import product_image_upload
+from .utils import category_image_upload, product_image_upload
 from .filters import *
 
 from .serializers import *
@@ -84,6 +84,35 @@ class CategoryViewSet(viewsets.ModelViewSet, ProductsQueryset):
         queryset = Category.objects.all()
         return queryset
 
+    def create(self, request, *args, **kwargs):
+        data= request.data
+        print(data)
+        serializer = CategoryCreateSerializer(data=data)
+        serializer.is_valid(raise_exception=True)
+        cat = serializer.save()
+
+        CATEGORY_IMAGES_KEY = "category_images/{image_name}.jpeg"
+
+        file = request.data.get("category_images")
+        if file:
+            opened_file = file.open()
+            base64_file = base64.b64encode(opened_file.read()).decode("utf-8")
+            opened_file.close()
+            key = CATEGORY_IMAGES_KEY.format(
+                image_name=str(cat.id)[24:]
+                + "-"
+                + str(int(timezone.now().timestamp()))
+            )
+            image_id = category_image_upload(
+                cat_id=str(cat.id),
+                base64_file=base64_file,
+                key=key,
+                file_name=str(file.name),
+                file_type=file.content_type,
+                file_size=file.size,
+            )
+        serializer= CategorySerializer(cat)
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
 
 class FarmerProductsViewSet(viewsets.ModelViewSet, ProductsQueryset):
     model = FarmerProducts

@@ -4,7 +4,7 @@ from django.conf import settings
 import boto3
 import base64
 from botocore.exceptions import ClientError
-from .models import File, Products
+from .models import File, Products, Category
 
 class S3Client(object):
     def __init__(
@@ -59,5 +59,31 @@ def product_image_upload(
     pro=Products.objects.get(id=product_id)
 
     file.product_images.add(pro)
+
+    return file.id
+
+
+def category_image_upload(
+    cat_id, base64_file, key, file_name, file_type, file_size
+):
+    s3client = S3Client()
+    uploaded_file, success = s3client.upload_file(file=base64_file, key=str(key))
+
+    print("*****",success)
+
+    if not success:
+        upload_url = ""
+
+    upload_url = S3_PATH_URL.format(
+        key=key, bucket=settings.AWS_STORAGE_BUCKET_NAME
+    )
+
+    file = File.objects.create(
+        name=file_name, key=key, url=upload_url, size=file_size, file_type=file_type
+    )
+
+    cat=Category.objects.get(id=cat_id)
+
+    file.cat_images.add(cat)
 
     return file.id

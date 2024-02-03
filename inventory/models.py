@@ -40,6 +40,12 @@ class File(PrimaryUUIDTimeStampedModel):
 
 class Category(PrimaryUUIDTimeStampedModel):
     name = models.CharField(max_length=60,choices=Category_types, blank=False, null=False)
+    images = models.ManyToManyField(
+        File,
+        related_name="cat_images",
+        null=True,
+        blank=True,
+    )
 
 class Products(PrimaryUUIDTimeStampedModel, CreatedByModel, LastModifiedByModel):
     name = models.CharField(max_length=60, blank=False, null=False)
