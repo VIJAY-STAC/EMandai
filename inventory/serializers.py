@@ -82,6 +82,7 @@ class ProductsStockListSerializer(serializers.ModelSerializer):
     product_name= serializers.CharField(source="product.name")
     packaging = serializers.CharField(source="product.packaging")
     product_images = serializers.SerializerMethodField(default=None)
+    category=serializers.CharField(source="product.category.name")
     class Meta:
         model = ProductsStock
         fields=(
@@ -94,7 +95,8 @@ class ProductsStockListSerializer(serializers.ModelSerializer):
             "inventory",
             "available",
             "discount",
-            "product_images"
+            "product_images",
+            "category"
         )
     def get_product_images(self, obj):
         img = obj.product.product_images.all().first().url
