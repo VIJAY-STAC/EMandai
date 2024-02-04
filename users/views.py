@@ -67,7 +67,8 @@ class UserViewSet(viewsets.ModelViewSet):
             try:
                 user_q = Routes.objects.get(pincode=pincode)
             except Routes.DoesNotExist:
-                return Response({"error": f"we are currently not serving in {pincode} pincode"},status=status.HTTP_400_BAD_REQUEST)
+                pass
+                # return Response({"error": f"we are currently not serving in {pincode} pincode"},status=status.HTTP_400_BAD_REQUEST)
             user_data["quadrant"]=user_q.quadrant.id
         if user_type=="rider":
             if not quadrant:

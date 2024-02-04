@@ -700,7 +700,7 @@ class B2COrdersViewSet(viewsets.ModelViewSet):
             return Response({"error":"product does not exist with given id."},status=status.HTTP_400_BAD_REQUEST)
         
         if product.inventory<qty:
-            return Response({"error":f"Current stock is {product.inventory}."},status=status.HTTP_400_BAD_REQUEST)
+            return Response({"error":f"Currently available stock is {product.inventory}."},status=status.HTTP_400_BAD_REQUEST)
         if qty==0:
             cart.delete()
         elif qty>0:
