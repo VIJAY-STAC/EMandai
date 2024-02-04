@@ -58,6 +58,9 @@ class UserViewSet(viewsets.ModelViewSet):
         if not user_type:
             return Response({"error": "user_type is required"},status=status.HTTP_400_BAD_REQUEST)
         
+        if len(pincode)>6:
+             return Response({"error": "pincode should be contains 6 digits."},status=status.HTTP_400_BAD_REQUEST)
+
         user = User.objects.filter(Q(phone_number=mb) | Q(email=email))
 
         if user:
