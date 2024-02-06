@@ -795,5 +795,11 @@ class B2COrdersViewSet(viewsets.ModelViewSet):
         ds = request.query_params.get('ds',None)
         no = request.query_params.get('no',None)
         products_to_update = ProductsStock.objects.all()[:int(no)]  # Fetch the first `no` records
+        
+        
+        for i in products_to_update:
+            i.discount= int(ds)
+            i.save()
+        
         count_updated = products_to_update.update(discount=ds) 
         return Response("ok", status=status.HTTP_200_OK)
