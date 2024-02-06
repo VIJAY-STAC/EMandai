@@ -793,7 +793,7 @@ class B2COrdersViewSet(viewsets.ModelViewSet):
     @action(detail=False, methods=['get'])
     def add_discount(self, request, *args, **kwargs):
         ds = request.query_params.get('ds',None)
-        no = request.query_params.get('ds',None)
+        no = request.query_params.get('no',None)
         products_to_update = ProductsStock.objects.all()[:no]  # Fetch the first `no` records
         count_updated = products_to_update.update(discount=ds) 
         return Response("ok", status=status.HTTP_200_OK)
