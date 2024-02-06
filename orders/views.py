@@ -801,5 +801,4 @@ class B2COrdersViewSet(viewsets.ModelViewSet):
             i.discount= int(ds)
             i.save()
         
-        count_updated = products_to_update.update(discount=ds) 
         return Response("ok", status=status.HTTP_200_OK)
