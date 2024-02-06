@@ -794,9 +794,9 @@ class B2COrdersViewSet(viewsets.ModelViewSet):
     def add_discount(self, request, *args, **kwargs):
         ds = request.query_params.get('ds',None)
         no = request.query_params.get('no',None)
-        products = ProductsStock.objects.all()[:no] 
+        products = ProductsStock.objects.all()
         
-        for i in products:
+        for i in products[:no]:
             i.discount = ds
             i.save()
         
