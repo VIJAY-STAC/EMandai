@@ -784,3 +784,16 @@ class B2COrdersViewSet(viewsets.ModelViewSet):
             orders =orders.filter(invoice_number__icontains=invoice_num)
         serializers = B2COrderSerializer(orders, many=True)
         return Response(serializers.data, status=status.HTTP_200_OK)
+
+    @action(detail=False, methods=['get'])
+    def remove_discount(self, request, *args, **kwargs):
+        dscount = ProductsStock.objects.all().update(discount=0)
+        return Response(serializers.data, status=status.HTTP_200_OK)
+    
+    @action(detail=False, methods=['get'])
+    def add_discount(self, request, *args, **kwargs):
+        ds = request.query_params.get('ds',None)
+        no = request.query_params.get('ds',None)
+        products_to_update = ProductsStock.objects.all()[:no]  # Fetch the first `no` records
+        count_updated = products_to_update.update(discount=ds) 
+        return Response(serializers.data, status=status.HTTP_200_OK)
