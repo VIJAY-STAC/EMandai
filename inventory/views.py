@@ -240,6 +240,10 @@ class ProductsStockViewSet(viewsets.ModelViewSet, ProductsStockQueryset):
 
         res["today_off"]=today_offer_serializer.data
 
+        fruits = queryset.filter(product__category__name="fruits")
+        fruits_serializer = ProductsStockListSerializer(fruits , many=True)
+        res["fruits"]=fruits_serializer.data
+
         vegies = queryset.filter(product__category__name="vegitables")
         vegies_serializer = ProductsStockListSerializer(vegies , many=True)
 
@@ -247,7 +251,6 @@ class ProductsStockViewSet(viewsets.ModelViewSet, ProductsStockQueryset):
 
         green_vegies = queryset.filter(product__category__name="green_vegies")
         green_vegies_serializer = ProductsStockListSerializer(green_vegies , many=True)
-
         res["green_vegies"]=green_vegies_serializer.data
 
 

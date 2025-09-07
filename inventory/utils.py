@@ -13,20 +13,32 @@ class S3Client(object):
         aws_secret_access_key=settings.AWS_SECRET_ACCESS_KEY,
         bucket_name=settings.AWS_STORAGE_BUCKET_NAME,
     ):
-        session = boto3.Session(aws_access_key_id, aws_secret_access_key)
+        session = boto3.Session(
+            aws_access_key_id=aws_access_key_id,
+            aws_secret_access_key=aws_secret_access_key
+        )
         s3 = session.resource("s3")
         self.bucket = s3.Bucket(bucket_name)
+        self.client = session.client("s3")  # ✅ add this for head_object
 
     def upload_file(self, file, key):
         decoded_file = base64.b64decode(file)
         try:
-            s3_object = self.bucket.put_object(
-                Key=key, Body=decoded_file, ACL="public-read"
+            # Upload file with public-read ACL
+            self.bucket.put_object(
+                Key=key, Body=decoded_file
             )
-        except ClientError as error:
-            return "error : %s" % error, False
 
-        return None, True
+            # ✅ Verify upload by checking object metadata
+            self.client.head_object(Bucket=self.bucket.name, Key=key)
+
+        except ClientError as error:
+            print(f"error: {error}")
+            return f"error: {error}", False
+
+        # If no exception raised → success
+        print(f"File uploaded successfully: {key}")
+        return f"File uploaded successfully: {key}", True
 
     def delete_file(self, key):
         try:

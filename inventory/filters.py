@@ -36,17 +36,19 @@ class CategoryFilter(django_filters.FilterSet):
 
 
 class ProductsStockFilter(django_filters.FilterSet):
-    p_name = django_filters.CharFilter(method="serach_products")
-    cat = django_filters.CharFilter(method="serach_category")
+    p_name = filters.CharFilter(method="search_products")
+    cat = filters.CharFilter(method="search_category")
+
     class Meta:
         model = ProductsStock
-        fields = [  "available"
-                 ]
+        fields = ["available"]
 
-    def serach_products(self, queryset, name, value):
-        queryset= queryset.filter(product__name__icontains=value)
+    def search_products(self, queryset, name, value):
+        if value:
+            queryset = queryset.filter(product__name__icontains=value)
         return queryset
 
-    def serach_category(self, queryset, name, value):
-        queryset= queryset.filter(product__category__name__icontains=value)
+    def search_category(self, queryset, name, value):
+        if value:
+            queryset = queryset.filter(product__category__name__icontains=value)
         return queryset
