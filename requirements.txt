@@ -11,6 +11,6 @@ django-cors-headers
 phonenumbers
 Pillow
 psycopg2
-django-filter==24.2
+django-filter
 
- django-phonenumber-field
+django-phonenumber-field
